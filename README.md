@@ -1,6 +1,6 @@
 **Installation:**
 
-Go to: https://micromkr.github.io/firmware/MicroMaker-Flasher.html
+In your browser open: https://micromkr.github.io/firmware/MicroMaker-Flasher.html
 
 Connect your microcontroller to the USB port of your computer.
 
