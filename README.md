@@ -2,6 +2,9 @@
 
 In your browser open: https://micromkr.github.io/firmware/MicroMaker-Flasher.html
 
+<img width="637" height="910" alt="image" src="https://github.com/user-attachments/assets/594e3584-957f-41c9-90c1-6ac70d901221" />
+
+
 Connect your microcontroller to the USB port of your computer.
 
 Choose the right firmware
