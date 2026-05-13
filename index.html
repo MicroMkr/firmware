@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Web Radio — Firmware Installer</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#12121e;color:#dde1f0;
+     min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.wrap{max-width:520px;width:100%}
+.hdr{text-align:center;padding:0 0 28px}
+.hdr h1{font-size:2rem;color:#7eb8ff;letter-spacing:3px}
+.hdr .sub{color:#5566aa;margin-top:6px;font-size:.88rem}
+.card{background:#1a1a2e;border:1px solid #2a2a4e;border-radius:12px;
+      padding:22px 24px;margin-bottom:14px}
+.card h2{font-size:1rem;font-weight:600;color:#7eb8ff;margin-bottom:12px}
+ol,ul{margin-left:20px;line-height:2;color:#aab}
+li strong{color:#dde1f0}
+li code{background:#0e0e1e;border:1px solid #334;border-radius:4px;
+        padding:1px 6px;font-family:monospace;font-size:.88rem;color:#7eb8ff}
+.step-num{display:inline-block;background:#2a2a4e;color:#7eb8ff;
+          border-radius:50%;width:22px;height:22px;text-align:center;
+          line-height:22px;font-size:.78rem;font-weight:700;margin-right:8px;
+          flex-shrink:0}
+.step{display:flex;align-items:flex-start;margin-bottom:12px;color:#aab;
+      font-size:.9rem;line-height:1.5}
+.step strong{color:#dde1f0}
+.install-wrap{text-align:center;padding:8px 0 4px}
+esp-web-install-button::part(button){
+  display:inline-block;padding:13px 32px;border-radius:8px;border:none;
+  font-size:1rem;font-weight:600;cursor:pointer;background:#2f9e44;color:#fff;
+  transition:background .15s;font-family:'Segoe UI',Arial,sans-serif}
+esp-web-install-button::part(button):hover{background:#40c057}
+.note{font-size:.78rem;color:#5566aa;margin-top:10px;text-align:center}
+#status-box{display:none;border-radius:10px;padding:16px 18px;
+            margin-bottom:14px;font-size:.92rem;line-height:1.6}
+#status-box.writing{background:#1a2030;border:1px solid #2a4060;color:#89b4fa}
+#status-box.encrypting{background:#1a2e1a;border:1px solid #2a5e2a;color:#a6e3a1}
+#status-box.done{background:#1a2e1a;border:1px solid #2a5e2a;color:#a6e3a1}
+#status-box.error{background:#2e1a1a;border:1px solid #5e2a2a;color:#f38ba8}
+.prog{font-size:1.6rem;margin-bottom:6px}
+.divider{border:none;border-top:1px solid #2a2a4e;margin:4px 0 14px}
+.foot{text-align:center;font-size:.75rem;color:#334466;margin-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hdr">
+    <h1>&#128251; Web Radio</h1>
+    <div class="sub" id="ver">Firmware Installer</div>
+  </div>
+
+  <!-- Step 1: Flash -->
+  <div class="card">
+    <h2>&#9312; Flash the device</h2>
+    <ul style="margin-bottom:14px">
+      <li>Use <strong>Google Chrome</strong> or <strong>Microsoft Edge</strong></li>
+      <li>Plug the ESP32-S3 into USB</li>
+      <li>Close Arduino IDE if open — it locks the COM port</li>
+    </ul>
+    <div class="install-wrap">
+      <esp-web-install-button manifest="manifest.json">
+        <button slot="activate">&#128268; Connect &amp; Flash</button>
+      </esp-web-install-button>
+    </div>
+    <p class="note">A port selection popup will appear — choose your ESP32-S3 COM port.</p>
+  </div>
+
+  <!-- Status box (shown during / after flash) -->
+  <div id="status-box">
+    <div class="prog" id="status-icon"></div>
+    <div id="status-msg"></div>
+  </div>
+
+  <!-- Step 2: Setup -->
+  <div class="card" id="setup-card">
+    <h2>&#9313; Set up after flashing</h2>
+    <div class="step"><span class="step-num">1</span>
+      <span>After flashing the device will reboot and broadcast a Wi-Fi network called
+      <strong>WebRadio-Setup</strong>. Connect your phone or laptop to it.</span>
+    </div>
+    <div class="step"><span class="step-num">2</span>
+      <span>Open a browser and go to <code>192.168.4.1</code>.
+      You will see a setup page showing your <strong>Chip&nbsp;ID</strong>.</span>
+    </div>
+    <div class="step"><span class="step-num">3</span>
+      <span>Send your <strong>Chip ID</strong> to the seller to receive your
+      <strong>Activation Code</strong>.</span>
+    </div>
+    <div class="step"><span class="step-num">4</span>
+      <span>Enter your <strong>Wi-Fi network name</strong>, <strong>password</strong>,
+      and <strong>Activation Code</strong> on the setup page and click
+      <em>Activate &amp; Install Firmware</em>.</span>
+    </div>
+    <div class="step"><span class="step-num">5</span>
+      <span>The device connects to your Wi-Fi, downloads and installs the radio firmware
+      automatically (~60&ndash;90 seconds). It will reboot into the radio when done.</span>
+    </div>
+  </div>
+
+  <div class="foot">My Web Radio &nbsp;&middot;&nbsp; <span id="yr"></span></div>
+</div>
+
+<script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js"></script>
+<script>
+document.getElementById('yr').textContent = new Date().getFullYear();
+fetch('manifest.json').then(r=>r.json()).then(m=>{
+  document.getElementById('ver').textContent = 'Version ' + m.version;
+}).catch(()=>{});
+
+const statusBox   = document.getElementById('status-box');
+const statusIcon  = document.getElementById('status-icon');
+const statusMsg   = document.getElementById('status-msg');
+const setupCard   = document.getElementById('setup-card');
+
+function showStatus(cls, icon, html) {
+  statusBox.className = cls;
+  statusBox.style.display = 'block';
+  statusIcon.textContent  = icon;
+  statusMsg.innerHTML     = html;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.querySelector('esp-web-install-button');
+  if (!btn) return;
+
+  btn.addEventListener('state-changed', e => {
+    const s = e.detail.state;
+
+    if (s === 'writing') {
+      showStatus('writing', '⚡',
+        '<strong>Writing firmware — please wait…</strong><br>' +
+        'Do not unplug the device.');
+
+    } else if (s === 'finished') {
+      showStatus('encrypting', '🔒',
+        '<strong>Flash complete! Device is securing its flash — wait ~60 seconds.</strong><br>' +
+        'The LED may be off during this time. <strong>Do not unplug.</strong><br><br>' +
+        'When done, the Wi-Fi network <strong>WebRadio-Setup</strong> will appear — ' +
+        'follow Step 2 below to finish setup.');
+      setupCard.style.border = '1px solid #2a5e2a';
+
+    } else if (s === 'error') {
+      showStatus('error', '✗',
+        '<strong>Installation failed.</strong><br>' +
+        (e.detail.message || 'Check the USB connection and try again.'));
+    }
+  });
+});
+</script>
+</body>
+</html>
