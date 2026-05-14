@@ -1,1 +1,0 @@
-﻿{"name":"My Web Radio Installer","version":"V1.0.3","builds":[{"chipFamily":"ESP32-S3","parts":[{"path":"stub_merged.bin","offset":0}]}]}
