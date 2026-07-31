@@ -1,3 +1,5 @@
+You can purchae the radio in my website: https://tmicromaker.com/
+
 **Installation:**
 
 In your browser open: https://micromkr.github.io/firmware/MicroMaker-Flasher.html
