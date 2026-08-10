@@ -1,4 +1,4 @@
-**You can purchae the radio in my website: https://tmicromaker.com/**
+**Firmware, fully assembled units, and kits are available on my website: https://tmicromaker.com/**
 
 **Installation:**
 
